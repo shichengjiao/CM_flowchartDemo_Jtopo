@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="jtopo-0.4.8-min.js"></script>
+</head>
+<body>
+    <canvas width="910" height="800" id="canvas"></canvas>
+    <script>
+
+        $(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            var stage = new JTopo.Stage(canvas);
+            //显示工具栏
+//            showJTopoToobar(stage);
+
+            var scene = new JTopo.Scene();
+            scene.background = './img/bg.jpg';
+            var ps = ['Top_Left', 'Top_Center', 'Top_Right', 'Middle_Left', 'Middle_Center'
+                , 'Middle_Right', 'Bottom_Left', 'Bottom_Center', 'Bottom_Right'];
+
+            var n = 0;
+            for(var i=0; i<3; i++){
+                for(var j=0; j<3; j++){
+                    var text = position = ps[n++];
+                    var circleNode = new JTopo.Node(text);
+                    circleNode.setSize(40, 40);
+                    circleNode.fillColor = '0, 0, 255';
+                    circleNode.setLocation(120 + j*140, 50 + i* 140);
+                    circleNode.textPosition = position;
+                    scene.add(circleNode);
+                }
+            }
+
+            var circleNode = new JTopo.CircleNode('左下偏移')
+            circleNode.fillColor = '0, 0, 0';
+            circleNode.setLocation(650, 200);
+            circleNode.textPosition = 'Middle_Center';
+
+            // 向左偏移 20像素
+            circleNode.textOffsetX = -30;
+            // 向下偏移 25像素
+            circleNode.textOffsetY = 30;
+
+            scene.add(circleNode);
+
+            stage.add(scene);
+
+            //居中显示
+            scene.centerAndZoom();
+        });
+
+    </script>
+</body>
+</html>

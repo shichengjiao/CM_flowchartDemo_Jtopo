@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="jtopo-0.4.8-min.js"></script>
+</head>
+<body>
+    <canvas width="910" height="800" id="canvas"></canvas>
+    <script>
+
+        $(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            var stage = new JTopo.Stage(canvas);
+            //显示工具栏
+//            showJTopoToobar(stage);
+
+            var scene = new JTopo.Scene(stage);
+            scene.alpha = 1;
+
+            function addNode(text, icon, x , y){
+                var node = new JTopo.Node();
+                node.setImage('./img/gather.png', true);
+                node.fontColor = '0,0,0';
+                node.setLocation(x, y);
+                scene.add(node);
+
+                node.mouseover(function(){
+                    this.text = text;
+                });
+                node.mouseout(function(){
+                    this.text = null;
+                });
+                return node;
+            }
+
+
+            function addLink(nodeA, nodeZ){
+                var link = new JTopo.Link(nodeA, nodeZ);
+                link.strokeColor = '204,204,204';
+                link.lineWidth = 1;
+                scene.add(link);
+                return link;
+            }
+
+            var rootNode = addNode('root', 'blue', 338, 225);
+            rootNode.alarm = 'Warrning';
+            rootNode.alarmColor = '255,0,0';
+            rootNode.alarmAlpha = 0.9;
+
+            var icons = ['green', 'blue', 'red1', 'red2'];
+            for(var i=0; i<icons.length; i++){
+                var node = addNode('input_' + i, icons[i], 231, 150 + i * 50);
+                var link = new JTopo.FlexionalLink(rootNode, node);
+                link.direction = 'horizontal';
+                link.strokeColor = '204,204,204';
+                link.lineWidth = 1;
+                scene.add(link);
+            }
+
+            var fwNode = addNode('fw_1', 'rect', 338 + 50, 184);
+            addLink(rootNode, fwNode);
+
+            var cloudNode = addNode('cloud', 'cloud', 340 + 100, 218);
+            addLink(fwNode, cloudNode);
+
+            var fw2Node = addNode('fw2Node', 'rect', 339 + 200, 184);
+            addLink(cloudNode, fw2Node);
+
+            var hostNode = addNode('host', 'gray', 339 + 250, 225);
+            addLink(fw2Node, hostNode);
+
+            for(var i=0; i<icons.length-1; i++){
+                var node = addNode('vm_' + i, icons[i], 339 + 300, 175 + i * 50);
+                var link = new JTopo.FoldLink(hostNode, node);
+                link.direction = 'vertical';
+                link.strokeColor = '204,204,204';
+                link.lineWidth = 1;
+                scene.add(link);
+            }
+        });
+
+    </script>
+</body>
+</html>

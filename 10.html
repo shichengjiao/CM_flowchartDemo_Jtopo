@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="jtopo-0.4.8-min.js"></script>
+</head>
+<body>
+    <canvas width="910" height="800" id="canvas"></canvas>
+    <script>
+
+        $(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            var stage = new JTopo.Stage(canvas);
+            //显示工具栏
+//            showJTopoToobar(stage);
+
+            var scene = new JTopo.Scene();
+            scene.background = './img/bg.jpg';
+
+            function randomIP(){
+                function num(){ return Math.floor(Math.random()*255);};
+                return num() + '.' + num() + '.' + num()+ '.' + num();
+            }
+
+            var icons = ['green', 'blue', 'gray'];
+            function node(x, y, img){
+                var node = new JTopo.Node(randomIP());
+                var imageIndex = Math.floor(Math.random() * icons.length);
+                node.setImage('./img/topo/' + icons[imageIndex] + '.png', true);
+                node.setLocation(x, y);
+                scene.add(node);
+                if(Math.random() < 0.2){
+                    node.alarm = '1 M';
+                }
+                return node;
+            }
+
+            function linkNode(nodeA, nodeZ){
+                var link = new JTopo.Link(nodeA, nodeZ);
+                link.strokeColor = '204,204,204';
+                link.lineWidth = 1;
+                scene.add(link);
+                return link;
+            }
+
+            var nodes = [];
+            for(var i=0; i<10; i++){
+                var row = [];
+                for(var j=0; j<10; j++){
+                    var n = node(20 + j * 120, 20 + i * 120);
+                    row.push(n);
+                    if(j>0){
+                        linkNode(n, row[j-1]);
+                        if(i>0){
+                            linkNode(nodes[i-1][j], row[j]);
+                        }
+                    }if(i>0 && j == 0){
+                        linkNode(nodes[i-1][j], row[j]);
+                    }
+                }
+                nodes.push(row);
+            }
+
+            stage.add(scene);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="jtopo-0.4.8-min.js"></script>
+</head>
+<body>
+    <canvas width="910" height="800" id="canvas"></canvas>
+    <script>
+
+        $(document).ready(function(){
+            var canvas = document.getElementById('canvas');
+            var stage = new JTopo.Stage(canvas);
+            //显示工具栏
+//            showJTopoToobar(stage);
+
+            var scene = new JTopo.Scene();
+            var scene2 = new JTopo.Scene();
+            scene2.visible = false;
+
+            for(var i= 0; i<100; i++){
+                var node = new JTopo.Node()
+                node.setLocation(Math.random() * stage.width, Math.random()*stage.height);
+
+                var color = Math.floor(Math.random() * 255)
+                    + ',' + Math.floor(Math.random() * 255)
+                    + ',' + Math.floor(Math.random() * 255);
+
+                node.fillStyle = color;
+
+                if(i % 2 == 0){
+                    scene.add(node);
+                }else{
+                    scene2.add(node);
+                }
+            };
+
+            stage.add(scene);
+            stage.add(scene2)
+
+            function changeScene(){
+                if(scene.visible){
+                    scene2.visible = true;
+                    scene.visible = false;
+                }else{
+                    scene2.visible = false;
+                    scene.visible = true;
+                }
+            }
+            stage.addEventListener('click', function(event){
+                changeScene();
+            });
+        });
+
+    </script>
+</body>
+</html>
